@@ -1,0 +1,30 @@
+INCLUDE(FindPkgConfig)
+PKG_CHECK_MODULES(PC_CONVCODES ConvCodes)
+
+FIND_PATH(
+    CONVCODES_INCLUDE_DIRS
+    NAMES ConvCodes/api.h
+    HINTS $ENV{CONVCODES_DIR}/include
+        ${PC_CONVCODES_INCLUDEDIR}
+    PATHS ${CMAKE_INSTALL_PREFIX}/include
+          /usr/local/include
+          /usr/include
+)
+
+FIND_LIBRARY(
+    CONVCODES_LIBRARIES
+    NAMES gnuradio-ConvCodes
+    HINTS $ENV{CONVCODES_DIR}/lib
+        ${PC_CONVCODES_LIBDIR}
+    PATHS ${CMAKE_INSTALL_PREFIX}/lib
+          ${CMAKE_INSTALL_PREFIX}/lib64
+          /usr/local/lib
+          /usr/local/lib64
+          /usr/lib
+          /usr/lib64
+)
+
+INCLUDE(FindPackageHandleStandardArgs)
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(CONVCODES DEFAULT_MSG CONVCODES_LIBRARIES CONVCODES_INCLUDE_DIRS)
+MARK_AS_ADVANCED(CONVCODES_LIBRARIES CONVCODES_INCLUDE_DIRS)
+

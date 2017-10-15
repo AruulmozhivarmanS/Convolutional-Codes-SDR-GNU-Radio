@@ -1,0 +1,13 @@
+/usr/local/lib/cmake/ConvCodes/ConvCodesConfig.cmake
+/usr/local/include/ConvCodes/api.h
+/usr/local/lib/python2.7/dist-packages/ConvCodes/__init__.py
+/usr/local/lib/python2.7/dist-packages/ConvCodes/ConvCode_encoder.py
+/usr/local/lib/python2.7/dist-packages/ConvCodes/ConvCode_decoder.py
+/usr/local/lib/python2.7/dist-packages/ConvCodes/__init__.pyc
+/usr/local/lib/python2.7/dist-packages/ConvCodes/ConvCode_encoder.pyc
+/usr/local/lib/python2.7/dist-packages/ConvCodes/ConvCode_decoder.pyc
+/usr/local/lib/python2.7/dist-packages/ConvCodes/__init__.pyo
+/usr/local/lib/python2.7/dist-packages/ConvCodes/ConvCode_encoder.pyo
+/usr/local/lib/python2.7/dist-packages/ConvCodes/ConvCode_decoder.pyo
+/usr/local/share/gnuradio/grc/blocks/ConvCodes_ConvCode_encoder.xml
+/usr/local/share/gnuradio/grc/blocks/ConvCodes_ConvCode_decoder.xml
