@@ -31,8 +31,10 @@ class ConvCode_decoder(gr.decim_block):
             name="ConvCode_decoder",
             in_sig=[numpy.byte],
             out_sig=[numpy.byte], decim = 2)
-        self.state_machine = {'00':['00','11'],'01':['11','00'],'10':['01','10'],'11':['10','01']}
-        self.state_machine_result = {'00':['00','10'],'01':['00','10'],'10':['01','11'],'11':['01','11']}
+        # self.state_machine = {'00':['00','11'],'01':['11','00'],'10':['01','10'],'11':['10','01']}
+        # self.state_machine_result = {'00':['00','10'],'01':['00','10'],'10':['01','11'],'11':['01','11']}
+        self.state_machine = {'00':[['00','00'],['11','10']],'01':[['11','00'],['00','10']],'10':[['01','01'],['10','11']],'11':[['10','01'],['01','11']]}
+        self.distance = {'00' : 0, '01' : 0, '10' : 0, '11' : 0}
         self.resolve = {'00':[0,0],'01':[0,1],'10':[1,0],'11':[1,1]}
         self.current_state = '00'
 
@@ -46,16 +48,21 @@ class ConvCode_decoder(gr.decim_block):
             in2 = in0[2 * i + 1]
             calculate = self.state_machine[self.current_state]
             # result = self.resolve[cal]
-            a1 = self.resolve[calculate[0]]
-            a2 = self.resolve[calculate[1]]
+            a1 = self.resolve[calculate[0][0]]
+            a2 = self.resolve[calculate[1][0]]
             # print(a1)
             # print(a2)
             # result = (a1[0] ^ in1 + a1[1] * in2) < (a2[0] ^ in1 + a2[1] * in2) ? 0:1
-            result =  0 if ((a1[0] ^ in1) + (a1[1] ^ in2)) < ((a2[0] ^ in1) + (a2[1] ^ in2)) else 1
-            state = self.state_machine_result[self.current_state][0] if ((a1[0] ^ in1) + (a1[1] ^ in2)) < ((a2[0] ^ in1) + (a2[1] ^ in2)) else self.state_machine_result[self.current_state][1]
-            self.current_state = state
+            # d1 = (a1[0] ^ in1) + (a1[1] ^ in2)
+            # d2 = (a2[0] ^ in1) + (a2[1] ^ in2)
+            self.distance[calculate[0][1]] += (a1[0] ^ in1) + (a1[1] ^ in2)
+            self.distance[calculate[1][1]] += (a2[0] ^ in1) + (a2[1] ^ in2)
+            result, self.current_state =  (0, calculate[0][1]) if (self.distance[calculate[0][1]] < self.distance[calculate[1][1]]) else (1, calculate[1][1])
+            # self.current_state = calculate[0][1] if ((a1[0] ^ in1) + (a1[1] ^ in2)) < ((a2[0] ^ in1) + (a2[1] ^ in2)) else calculate[1][1]
+            # self.current_state = state
             # print(self.current_state)
             # print(result)
+            # print(self.distance)
             out[i] = result
         return len(output_items[0])
 
