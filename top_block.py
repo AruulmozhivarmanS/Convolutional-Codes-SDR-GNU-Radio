@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Top Block
-# Generated: Mon Oct 16 10:27:15 2017
+# Generated: Mon Oct 16 13:32:05 2017
 ##################################################
 
 if __name__ == '__main__':
@@ -17,9 +17,7 @@ if __name__ == '__main__':
             print "Warning: failed to XInitThreads()"
 
 from PyQt4 import Qt
-from gnuradio import analog
 from gnuradio import blocks
-from gnuradio import digital
 from gnuradio import eng_notation
 from gnuradio import gr
 from gnuradio import qtgui
@@ -27,6 +25,7 @@ from gnuradio.eng_option import eng_option
 from gnuradio.filter import firdes
 from optparse import OptionParser
 import ConvCodes
+import numpy
 import sip
 import sys
 
@@ -110,64 +109,16 @@ class top_block(gr.top_block, Qt.QWidget):
         
         self._qtgui_time_sink_x_0_win = sip.wrapinstance(self.qtgui_time_sink_x_0.pyqwidget(), Qt.QWidget)
         self.top_layout.addWidget(self._qtgui_time_sink_x_0_win)
-        self.qtgui_histogram_sink_x_0 = qtgui.histogram_sink_f(
-        	1024,
-        	100,
-                -1,
-                1,
-        	"",
-        	1
-        )
-        
-        self.qtgui_histogram_sink_x_0.set_update_time(0.10)
-        self.qtgui_histogram_sink_x_0.enable_autoscale(True)
-        self.qtgui_histogram_sink_x_0.enable_accumulate(False)
-        self.qtgui_histogram_sink_x_0.enable_grid(False)
-        
-        if not True:
-          self.qtgui_histogram_sink_x_0.disable_legend()
-        
-        labels = ["", "", "", "", "",
-                  "", "", "", "", ""]
-        widths = [1, 1, 1, 1, 1,
-                  1, 1, 1, 1, 1]
-        colors = ["blue", "red", "green", "black", "cyan",
-                  "magenta", "yellow", "dark red", "dark green", "dark blue"]
-        styles = [1, 1, 1, 1, 1,
-                  1, 1, 1, 1, 1]
-        markers = [-1, -1, -1, -1, -1,
-                   -1, -1, -1, -1, -1]
-        alphas = [1.0, 1.0, 1.0, 1.0, 1.0,
-                  1.0, 1.0, 1.0, 1.0, 1.0]
-        for i in xrange(1):
-            if len(labels[i]) == 0:
-                self.qtgui_histogram_sink_x_0.set_line_label(i, "Data {0}".format(i))
-            else:
-                self.qtgui_histogram_sink_x_0.set_line_label(i, labels[i])
-            self.qtgui_histogram_sink_x_0.set_line_width(i, widths[i])
-            self.qtgui_histogram_sink_x_0.set_line_color(i, colors[i])
-            self.qtgui_histogram_sink_x_0.set_line_style(i, styles[i])
-            self.qtgui_histogram_sink_x_0.set_line_marker(i, markers[i])
-            self.qtgui_histogram_sink_x_0.set_line_alpha(i, alphas[i])
-        
-        self._qtgui_histogram_sink_x_0_win = sip.wrapinstance(self.qtgui_histogram_sink_x_0.pyqwidget(), Qt.QWidget)
-        self.top_layout.addWidget(self._qtgui_histogram_sink_x_0_win)
-          
-        self.digital_binary_slicer_fb_0 = digital.binary_slicer_fb()
         self.blocks_char_to_float_0 = blocks.char_to_float(1, 1)
-        self.analog_sig_source_x_0 = analog.sig_source_f(samp_rate, analog.GR_SIN_WAVE, 1000, 5, 0)
+        self.analog_random_source_x_0 = blocks.vector_source_b(map(int, numpy.random.randint(0, 2, 1000)), True)
         self.ConvCodes_ConvCode_encoder_0 = ConvCodes.ConvCode_encoder()
-        self.ConvCodes_ConvCode_decoder_0 = ConvCodes.ConvCode_decoder()
 
         ##################################################
         # Connections
         ##################################################
-        self.connect((self.ConvCodes_ConvCode_decoder_0, 0), (self.blocks_char_to_float_0, 0))    
-        self.connect((self.ConvCodes_ConvCode_encoder_0, 0), (self.ConvCodes_ConvCode_decoder_0, 0))    
-        self.connect((self.analog_sig_source_x_0, 0), (self.digital_binary_slicer_fb_0, 0))    
-        self.connect((self.blocks_char_to_float_0, 0), (self.qtgui_histogram_sink_x_0, 0))    
+        self.connect((self.ConvCodes_ConvCode_encoder_0, 0), (self.blocks_char_to_float_0, 0))    
+        self.connect((self.analog_random_source_x_0, 0), (self.ConvCodes_ConvCode_encoder_0, 0))    
         self.connect((self.blocks_char_to_float_0, 0), (self.qtgui_time_sink_x_0, 0))    
-        self.connect((self.digital_binary_slicer_fb_0, 0), (self.ConvCodes_ConvCode_encoder_0, 0))    
 
     def closeEvent(self, event):
         self.settings = Qt.QSettings("GNU Radio", "top_block")
@@ -180,7 +131,6 @@ class top_block(gr.top_block, Qt.QWidget):
 
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
-        self.analog_sig_source_x_0.set_sampling_freq(self.samp_rate)
         self.qtgui_time_sink_x_0.set_samp_rate(self.samp_rate)
 
 

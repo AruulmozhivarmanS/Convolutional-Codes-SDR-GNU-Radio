@@ -44,7 +44,7 @@ class qa_ConvCode_encoder (gr_unittest.TestCase):
         self.tb.connect (conv_encoder, dst)
         self.tb.run()
         result_data = dst.data()
-        print(result_data)
+        # print(result_data)
         self.assertFloatTuplesAlmostEqual (expected_result, result_data)
 
 
